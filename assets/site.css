@@ -1,0 +1,29 @@
+/* Additions for the static rebuild — hero line entrance */
+
+html.js [data-hero-line] {
+  opacity: 0;
+  transform: translateY(110%);
+}
+
+html.js [data-hero-line].hero-in {
+  animation: hero-line 1.1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes hero-line {
+  from {
+    opacity: 0;
+    transform: translateY(110%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-hero-line] {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
