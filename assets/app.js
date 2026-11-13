@@ -7,6 +7,38 @@
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------------------------------------------------------------
+   * Config: one place for the studio phone number (assets/config.js)
+   * ------------------------------------------------------------- */
+  var CONFIG = window.INNERBRICK_CONFIG || {};
+  var WHATSAPP = String(CONFIG.whatsappNumber || "919000000000").replace(/[^0-9]/g, "");
+  var PHONE_TEL = CONFIG.phoneTel || "+919000000000";
+  var PHONE_DISPLAY = CONFIG.phoneDisplay || "+91 90000 00000";
+
+  function whatsappHref(text) {
+    return (
+      "https://wa.me/" +
+      WHATSAPP +
+      "?text=" +
+      encodeURIComponent(text || CONFIG.defaultMessage || "Hi InnerBrick, I'd like a quote.")
+    );
+  }
+
+  /* Every WhatsApp / call link on the page, including the sticky bar */
+  document.querySelectorAll("[data-wa-link]").forEach(function (a) {
+    a.setAttribute("href", whatsappHref(a.getAttribute("data-wa-text")));
+    a.setAttribute("target", "_blank");
+    a.setAttribute("rel", "noopener noreferrer");
+  });
+
+  document.querySelectorAll("[data-tel-link]").forEach(function (a) {
+    a.setAttribute("href", "tel:" + PHONE_TEL);
+  });
+
+  document.querySelectorAll("[data-phone-display]").forEach(function (el) {
+    el.textContent = PHONE_DISPLAY;
+  });
+
+  /* ---------------------------------------------------------------
    * Header: solid background once the page is scrolled past 24px
    * ------------------------------------------------------------- */
   var header = document.querySelector("header");
@@ -136,8 +168,8 @@
     "/products/custom-3d-figure": "Resin"
   };
 
-  var filterBar = document.querySelector("div.mt-10.flex.flex-wrap.gap-2");
-  var productGrid = document.querySelector("div.mt-10.grid.gap-6");
+  var filterBar = document.getElementById("product-filter");
+  var productGrid = document.getElementById("product-grid");
 
   if (filterBar && productGrid) {
     var cards = Array.prototype.slice.call(productGrid.children);
@@ -216,78 +248,73 @@
   }
 
   /* ---------------------------------------------------------------
-   * Custom order form — validate, then hand off to the mail client
+   * Instant quote form — validate, then hand off to WhatsApp with a
+   * pre-filled message (no backend, no account, no mail client)
    * ------------------------------------------------------------- */
-  var form = document.querySelector('form[data-custom-form]');
-  if (form) {
+  document.querySelectorAll("form[data-quote-form]").forEach(function (form) {
+    var status = form.querySelector("[data-quote-status]");
+
     form.addEventListener("submit", function (event) {
       event.preventDefault();
-      var data = Object.fromEntries(new FormData(form));
-      var errors = validate(data);
+      var values = {};
+      Array.prototype.forEach.call(form.elements, function (el) {
+        if (el.name) values[el.name] = el.value;
+      });
+
+      var errors = validate(values);
       renderErrors(form, errors);
-      if (Object.keys(errors).length) return;
+      if (Object.keys(errors).length) {
+        if (status) status.textContent = "";
+        var first = form.querySelector(".ib-error");
+        if (first) first.previousElementSibling.focus();
+        return;
+      }
 
-      var subject = "Custom order idea from " + data.name.trim();
-      var body = [
-        "Hi InnerBrick, I have a custom idea.",
+      var photo = form.querySelector('input[type="file"]');
+      var lines = [
+        "Hi InnerBrick, I'd like a quote.",
         "",
-        "Name: " + data.name.trim(),
-        "Phone: " + data.phone.trim(),
-        data.occasion && data.occasion.trim() ? "Occasion: " + data.occasion.trim() : null,
-        "Idea: " + data.idea.trim()
-      ]
-        .filter(Boolean)
-        .join("\r\n");
+        "Name: " + values.name.trim(),
+        "WhatsApp: " + values.phone.trim(),
+        values.product ? "Product / idea: " + values.product : null,
+        values.notes && values.notes.trim() ? "Notes: " + values.notes.trim() : null,
+        photo && photo.files && photo.files.length
+          ? "(I have a reference photo to send here.)"
+          : null
+      ].filter(Boolean);
 
-      var button = form.querySelector('button[type="submit"]');
-      var original = button.innerHTML;
-      button.disabled = true;
-      button.innerHTML =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-circle h-4 w-4 animate-spin" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg> Opening email…';
+      window.open(whatsappHref(lines.join("\n")), "_blank", "noopener");
 
-      window.location.href =
-        "mailto:innerbrick01@gmail.com?subject=" +
-        encodeURIComponent(subject) +
-        "&body=" +
-        encodeURIComponent(body);
-
-      window.setTimeout(function () {
-        button.disabled = false;
-        button.innerHTML = original;
-        window.location.href = "/thank-you/";
-      }, 600);
+      if (status) {
+        status.textContent =
+          "WhatsApp is opening with your details filled in — press send there and we'll reply with a price and a digital preview.";
+      }
     });
-  }
+  });
 
   function validate(values) {
     var errors = {};
     var name = (values.name || "").trim();
     var phone = (values.phone || "").trim();
-    var occasion = (values.occasion || "").trim();
-    var idea = (values.idea || "").trim();
+    var notes = (values.notes || "").trim();
 
-    if (name.length < 2) errors.name = "Please tell us your name";
-    else if (name.length > 80) errors.name = "Please tell us your name";
-
-    if (!/^[0-9+\s-]{8,16}$/.test(phone)) errors.phone = "Enter a valid phone number";
-    if (occasion.length > 80) errors.occasion = "Occasion is too long";
-
-    if (idea.length < 10) errors.idea = "A sentence or two helps us quote accurately";
-    else if (idea.length > 800) errors.idea = "Please keep the idea under 800 characters";
+    if (name.length < 2 || name.length > 80) errors.name = "Please tell us your name";
+    if (!/^[0-9+\s-]{8,16}$/.test(phone)) errors.phone = "Enter a valid WhatsApp number";
+    if (notes.length > 800) errors.notes = "Please keep the notes under 800 characters";
 
     return errors;
   }
 
   function renderErrors(form, errors) {
-    form.querySelectorAll("[role=alert]").forEach(function (el) {
+    form.querySelectorAll(".ib-error").forEach(function (el) {
       el.remove();
     });
     Object.keys(errors).forEach(function (field) {
       var input = form.querySelector('[name="' + field + '"]');
       if (!input) return;
       var p = document.createElement("p");
+      p.className = "ib-error";
       p.setAttribute("role", "alert");
-      p.className = "mt-1.5 text-xs text-destructive";
       p.textContent = errors[field];
       input.insertAdjacentElement("afterend", p);
     });

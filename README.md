@@ -26,6 +26,7 @@ Any static file server works — the site has no build step and no runtime depen
 | `/custom` | `custom/index.html` |
 | `/about` | `about/index.html` |
 | `/contact` | `contact/index.html` |
+| `/custom-gifts-delhi-ncr` | `custom-gifts-delhi-ncr/index.html` |
 | `/privacy` | `privacy/index.html` |
 | `/terms` | `terms/index.html` |
 | `/thank-you` | `thank-you/index.html` |
@@ -33,9 +34,12 @@ Any static file server works — the site has no build step and no runtime depen
 ## Assets
 
 - `assets/styles.css` — the site's compiled Tailwind v4 stylesheet, taken unchanged.
-- `assets/site.css` — hero headline entrance animation (the original does this with GSAP).
+- `assets/site.css` — hero headline entrance animation plus the components added for the
+  SEO/CRO pass (trust strip, sticky CTA bar, quote form, comparison table, FAQ accordion).
+- `assets/config.js` — **the one place to change the studio phone number**, WhatsApp
+  number, email and catalogue prices. Every WhatsApp and `tel:` link is built from it.
 - `assets/app.js` — interactions, see below.
-- `assets/img/` — logo, product photography, favicon.
+- `assets/img/` — logo and product photography, all WebP (largest file ≈ 114 KB).
 
 ## Interactions (`assets/app.js`)
 
@@ -48,17 +52,26 @@ Any static file server works — the site has no build step and no runtime depen
   "Nothing in Custom yet — but we can still make it." empty state.
 - Product page engraving note: live `n/400` counter that also travels into the
   `mailto:` enquiry body.
-- `/custom` order form: same validation messages as the original, then hands off to
-  the visitor's mail client and lands on `/thank-you`.
+- Instant quote form (`/custom`, `/contact`, every `/products/*` page): validates name
+  and WhatsApp number, then opens WhatsApp with the details pre-filled. No backend.
+- Every WhatsApp / call link (`data-wa-link`, `data-tel-link`) is rewritten from
+  `assets/config.js` on load, including the sticky mobile bar.
+
+## Before you deploy
+
+1. Open `assets/config.js` and replace `whatsappNumber`, `phoneTel` and
+   `phoneDisplay`. The placeholders (`919000000000` / `+91 90000 00000`) also appear
+   verbatim in the JSON-LD `telephone` fields and in the no-JS `href` fallbacks —
+   search for `9000000000` and replace those if you want crawlers and no-JS visitors
+   to see the real number too.
+2. Prices live in the page copy and in the `Product` schema offers (₹649 figure,
+   ₹899 keepsake box, ₹1,299 relief panel, ₹749 memento).
+3. `_headers` sets long-lived caching for `/assets/img/*` and revalidation for HTML on
+   Netlify / Cloudflare Pages. On another host, configure the same rules there.
 
 ## Regenerating
 
-`tools/extract.py` rebuilds the HTML files from the pages captured from the live site
-(in the system temp dir under `ib/`). `tools/verify.py` re-checks every page against
-the live site (rendered text + screenshot pixel diff), and `tools/cdp-test.mjs` drives
-the interactions through Chrome DevTools Protocol:
-
-```bash
-python tools/verify.py
-node tools/cdp-test.mjs     # needs Chrome started with --remote-debugging-port=9222
-```
+The HTML is hand-maintained now that the audit copy and schema are in place. The
+original extraction tooling (`tools/extract.py`, `tools/verify.py`, `tools/cdp-test.mjs`)
+was used for the first rebuild and is no longer part of this repository — re-running it
+would overwrite the SEO copy, H1s and JSON-LD.

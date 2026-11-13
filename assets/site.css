@@ -27,3 +27,454 @@ html.js [data-hero-line].hero-in {
     animation: none;
   }
 }
+
+/* ============================================================================
+   Components added with the technical SEO / CRO pass:
+   trust strip, sticky WhatsApp + Call bar, instant quote form,
+   comparison table, FAQ accordion and long-form detail sections.
+   Colours come from the compiled Tailwind theme in styles.css.
+   ========================================================================== */
+
+/* --- Trust strip ---------------------------------------------------------- */
+.ib-trust {
+  display: grid;
+  gap: 0.75rem 1.25rem;
+  max-width: 64rem;
+  margin: 2.25rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  text-align: left;
+}
+
+@media (min-width: 640px) {
+  .ib-trust {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .ib-trust {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.ib-trust__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+
+.ib-trust__item svg {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.15rem;
+  color: var(--primary);
+}
+
+/* --- Sticky mobile CTA bar ------------------------------------------------ */
+.ib-cta-bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 45;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  padding: 0.625rem 0.75rem calc(0.625rem + env(safe-area-inset-bottom));
+  background: var(--background);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -6px 18px rgb(0 0 0 / 0.06);
+}
+
+@media (min-width: 640px) {
+  .ib-cta-bar {
+    display: none;
+  }
+}
+
+.ib-cta-bar a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.75rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.ib-cta-bar svg {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+
+.ib-cta-bar__wa {
+  background: #128c7e;
+  color: #fff;
+}
+
+.ib-cta-bar__wa:hover {
+  background: #0e7266;
+}
+
+.ib-cta-bar__call {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+@media (max-width: 639px) {
+  body {
+    padding-bottom: 5rem;
+  }
+}
+
+/* --- Instant quote form --------------------------------------------------- */
+.ib-quote {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+}
+
+@media (min-width: 640px) {
+  .ib-quote {
+    padding: 2rem;
+  }
+}
+
+.ib-quote__grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .ib-quote__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ib-field--full {
+    grid-column: 1 / -1;
+  }
+}
+
+.ib-field label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.ib-field .ib-opt {
+  font-weight: 400;
+  color: var(--muted-foreground);
+}
+
+.ib-field input,
+.ib-field select,
+.ib-field textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  border: 1px solid var(--input, var(--border));
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--card);
+  padding: 0.7rem 0.875rem;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--foreground);
+}
+
+.ib-field textarea {
+  min-height: 5.5rem;
+  resize: vertical;
+}
+
+.ib-field input[type="file"] {
+  padding: 0.5rem;
+  font-size: 0.8125rem;
+}
+
+.ib-field input:focus,
+.ib-field select:focus,
+.ib-field textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgb(0 0 0 / 0.06);
+}
+
+.ib-error {
+  margin-top: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--destructive, #b42318);
+}
+
+.ib-quote__submit {
+  cursor: pointer;
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  border-radius: 9999px;
+  background: #128c7e;
+  padding: 0.9rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.ib-quote__submit:hover {
+  background: #0e7266;
+}
+
+.ib-quote__note {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+  text-align: center;
+}
+
+.ib-quote__status {
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--primary);
+  text-align: center;
+}
+
+.ib-quote__status:empty {
+  display: none;
+}
+
+/* --- Comparison table ----------------------------------------------------- */
+.ib-table-wrap {
+  margin-top: 1.75rem;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  -webkit-overflow-scrolling: touch;
+}
+
+.ib-table {
+  width: 100%;
+  min-width: 44rem;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.ib-table th,
+.ib-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.ib-table thead th {
+  background: var(--secondary);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+
+.ib-table tbody th {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.ib-table tbody tr:last-child th,
+.ib-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.ib-table a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* --- FAQ accordion -------------------------------------------------------- */
+.ib-faq {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.ib-faq details {
+  border-bottom: 1px solid var(--border);
+}
+
+.ib-faq summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--foreground);
+  list-style: none;
+}
+
+.ib-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.ib-faq summary::after {
+  content: "+";
+  flex: none;
+  font-weight: 400;
+  color: var(--primary);
+}
+
+.ib-faq details[open] summary::after {
+  content: "\2013";
+}
+
+.ib-faq p {
+  padding: 0 0 1rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--muted-foreground);
+}
+
+/* --- Long-form detail blocks --------------------------------------------- */
+.ib-detail {
+  margin-top: 2rem;
+}
+
+.ib-detail h2 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  color: var(--foreground);
+}
+
+.ib-detail h3 {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.ib-detail p {
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--muted-foreground);
+}
+
+.ib-detail ul {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.6rem;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--muted-foreground);
+}
+
+.ib-detail li {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.ib-detail li::before {
+  content: "";
+  flex: none;
+  width: 1rem;
+  height: 1px;
+  margin-top: 0.7rem;
+  background: var(--primary);
+}
+
+.ib-detail strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+/* --- Three-step cards ---------------------------------------------------- */
+.ib-steps {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+  counter-reset: ib-step;
+}
+
+@media (min-width: 768px) {
+  .ib-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.ib-step {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 1.5rem;
+}
+
+.ib-step__num {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  color: var(--primary);
+}
+
+.ib-step h3 {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.ib-step p {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--muted-foreground);
+}
+
+/* --- Contact / coverage list --------------------------------------------- */
+.ib-contact-list {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+}
+
+.ib-contact-list a {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.ib-contact-list svg {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  margin-top: 0.15rem;
+  color: var(--primary);
+}
+
+.ib-contact-list > * {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+}
+
