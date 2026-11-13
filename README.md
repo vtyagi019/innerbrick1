@@ -66,8 +66,30 @@ Any static file server works — the site has no build step and no runtime depen
    to see the real number too.
 2. Prices live in the page copy and in the `Product` schema offers (₹649 figure,
    ₹899 keepsake box, ₹1,299 relief panel, ₹749 memento).
-3. `_headers` sets long-lived caching for `/assets/img/*` and revalidation for HTML on
-   Netlify / Cloudflare Pages. On another host, configure the same rules there.
+3. `vercel.json` sets long-lived caching for `/assets/img/*`, keeps `app.js`/`site.css`
+   on a one-day cache, disables trailing slashes, and redirects the apex domain to
+   `https://www.innerbrick.shop` so it matches the canonical tags. Vercel applies it on
+   deploy; no dashboard equivalent is needed.
+
+## Hosting (Vercel + Hostinger DNS)
+
+The site is static, so Vercel serves it straight from the CDN — there is no build step
+and no framework preset needed (Framework Preset: **Other**, Build Command empty,
+Output Directory: leave blank / `.`).
+
+In Vercel → Project → Settings → Domains, add **both** `www.innerbrick.shop` and
+`innerbrick.shop`, and set `www` as the primary domain.
+
+At Hostinger (hPanel → Domains → DNS records), keep Hostinger's nameservers and add:
+
+| Type | Name | Value |
+| --- | --- | --- |
+| A | `@` | `76.76.21.21` |
+| CNAME | `www` | `cname.vercel-dns.com` |
+
+Remove any Hostinger parking/website-builder A or CNAME records for `@` and `www` that
+conflict, then wait for propagation — Vercel issues the TLS certificate automatically
+once the records resolve.
 
 ## Regenerating
 
