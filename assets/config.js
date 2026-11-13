@@ -1,5 +1,5 @@
 /* ============================================================================
-   InnerBrick — SITE CONFIG
+   InnerBrick -SITE CONFIG
    ----------------------------------------------------------------------------
    THIS IS THE ONE PLACE TO EDIT THE PHONE NUMBERS.
    Every WhatsApp link and "Call Now" link on the site is built from the values

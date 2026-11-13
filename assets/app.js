@@ -1,4 +1,4 @@
-/* InnerBrick — site interactions (static rebuild of the original React app) */
+/* InnerBrick -site interactions (static rebuild of the original React app) */
 (function () {
   "use strict";
 
@@ -112,7 +112,7 @@
   });
 
   /* ---------------------------------------------------------------
-   * .reveal — staggered entrance on scroll
+   * .reveal -staggered entrance on scroll
    * ------------------------------------------------------------- */
   var revealEls = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
 
@@ -205,7 +205,7 @@
       emptyState.classList.toggle("hidden", visible > 0);
       if (!visible) {
         emptyState.querySelector("p").textContent =
-          "Nothing in " + value + " yet — but we can still make it.";
+          "Nothing in " + value + " yet -but we can still make it.";
       }
     });
   }
@@ -242,13 +242,13 @@
 
     engraving.addEventListener("input", function () {
       var value = engraving.value;
-      counter.textContent = value.length + "/400 — it travels with your enquiry.";
+      counter.textContent = value.length + "/400 -it travels with your enquiry.";
       if (mailLink) mailLink.setAttribute("href", buildEnquiry(value.trim()));
     });
   }
 
   /* ---------------------------------------------------------------
-   * Instant quote form — validate, then hand off to WhatsApp with a
+   * Instant quote form -validate, then hand off to WhatsApp with a
    * pre-filled message (no backend, no account, no mail client)
    * ------------------------------------------------------------- */
   document.querySelectorAll("form[data-quote-form]").forEach(function (form) {
@@ -287,7 +287,7 @@
 
       if (status) {
         status.textContent =
-          "WhatsApp is opening with your details filled in — press send there and we'll reply with a price and a digital preview.";
+          "WhatsApp is opening with your details filled in -press send there and we'll reply with a price and a digital preview.";
       }
     });
   });

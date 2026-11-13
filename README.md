@@ -1,4 +1,4 @@
-# InnerBrick — static rebuild
+# InnerBrick -static rebuild
 
 A same-to-same rebuild of https://innerbrick.lovable.app/ as a dependency-free static
 site: the original markup, the original compiled stylesheet, the original photography,
@@ -11,7 +11,7 @@ cd innerbrick-clone
 python -m http.server 4173      # then open http://127.0.0.1:4173
 ```
 
-Any static file server works — the site has no build step and no runtime dependencies.
+Any static file server works -the site has no build step and no runtime dependencies.
 
 ## Pages
 
@@ -33,13 +33,13 @@ Any static file server works — the site has no build step and no runtime depen
 
 ## Assets
 
-- `assets/styles.css` — the site's compiled Tailwind v4 stylesheet, taken unchanged.
-- `assets/site.css` — hero headline entrance animation plus the components added for the
+- `assets/styles.css` -the site's compiled Tailwind v4 stylesheet, taken unchanged.
+- `assets/site.css` -hero headline entrance animation plus the components added for the
   SEO/CRO pass (trust strip, sticky CTA bar, quote form, comparison table, FAQ accordion).
-- `assets/config.js` — **the one place to change the studio phone number**, WhatsApp
+- `assets/config.js` -**the one place to change the studio phone number**, WhatsApp
   number, email and catalogue prices. Every WhatsApp and `tel:` link is built from it.
-- `assets/app.js` — interactions, see below.
-- `assets/img/` — logo and product photography, all WebP (largest file ≈ 114 KB).
+- `assets/app.js` -interactions, see below.
+- `assets/img/` -logo and product photography, all WebP (largest file ≈ 114 KB).
 
 ## Interactions (`assets/app.js`)
 
@@ -49,7 +49,7 @@ Any static file server works — the site has no build step and no runtime depen
   (capped at 450 ms) exactly like the original observer.
 - Hero headline lines rise out of their clipping wrapper on load.
 - `/products` material filter (All / Wood / MDF / Resin / Custom) including the
-  "Nothing in Custom yet — but we can still make it." empty state.
+  "Nothing in Custom yet -but we can still make it." empty state.
 - Product page engraving note: live `n/400` counter that also travels into the
   `mailto:` enquiry body.
 - Instant quote form (`/custom`, `/contact`, every `/products/*` page): validates name
@@ -73,27 +73,32 @@ Any static file server works — the site has no build step and no runtime depen
 
 ## Hosting (Vercel + Hostinger DNS)
 
-The site is static, so Vercel serves it straight from the CDN — there is no build step
+The site is static, so Vercel serves it straight from the CDN -there is no build step
 and no framework preset needed (Framework Preset: **Other**, Build Command empty,
 Output Directory: leave blank / `.`).
 
 In Vercel → Project → Settings → Domains, add **both** `www.innerbrick.shop` and
 `innerbrick.shop`, and set `www` as the primary domain.
 
-At Hostinger (hPanel → Domains → DNS records), keep Hostinger's nameservers and add:
+At Hostinger (hPanel → Domains → DNS records), keep Hostinger's nameservers and set:
 
 | Type | Name | Value |
 | --- | --- | --- |
-| A | `@` | `76.76.21.21` |
+| A | `@` | the apex value Vercel shows for this domain (currently `216.198.79.1`; older projects use `76.76.21.21`) |
 | CNAME | `www` | `cname.vercel-dns.com` |
 
 Remove any Hostinger parking/website-builder A or CNAME records for `@` and `www` that
-conflict, then wait for propagation — Vercel issues the TLS certificate automatically
-once the records resolve.
+conflict - in particular the `2.57.91.91` parking A record, which serves the "Parked
+Domain name on Hostinger DNS system" page on the bare domain. Then wait for propagation;
+Vercel issues the TLS certificate automatically once the records resolve.
+
+The apex must also be added in Vercel → Settings → Domains, otherwise requests to it are
+not routed to the project. With `www` as primary, Vercel (and the redirect in
+`vercel.json`) sends the apex to `https://www.innerbrick.shop` in one hop.
 
 ## Regenerating
 
 The HTML is hand-maintained now that the audit copy and schema are in place. The
 original extraction tooling (`tools/extract.py`, `tools/verify.py`, `tools/cdp-test.mjs`)
-was used for the first rebuild and is no longer part of this repository — re-running it
+was used for the first rebuild and is no longer part of this repository -re-running it
 would overwrite the SEO copy, H1s and JSON-LD.
